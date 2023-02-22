@@ -1,0 +1,18 @@
+"0","library(tidyverse)"
+"0","library(readxl)"
+"0","library(skimr)"
+"0","library(corrplot)"
+"0","library(broom)"
+"0","library(lmtest)"
+"0","library(plm)"
+"2","
+Attaching package: ‘plm’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    between, lag, lead
+
+"
+"0","datos <- read_excel(""EC1116C dataf.xlsx"")"
+"0","base <- read_excel(""EC1116C dataf_dicc.xlsx"")"

@@ -1,0 +1,7 @@
+"0","mdl1 <- lm(Gastos_comunicacion_D ~ Software + Equipos + Anio_inicio, data = df)"
+"0","mdl2 <- lm(Gastos_comunicacion_D ~ Software + Equipos + Gremio, data = df)"
+"0","mdl3 <- lm(Gastos_comunicacion_D ~ Software + Equipos + Exportaciones, data = df)"
+"0","mdl4 <- lm(Gastos_comunicacion_D ~ Software:Equipos + Anio_inicio, data = df)"
+"0","mdl5 <- lm(Gastos_comunicacion_D ~ Software:Equipos + Gremio, data = df)"
+"0","mdl6 <- lm(Gastos_comunicacion_D ~ I(Software*Equipos) + Anio_inicio, data = df)"
+"0","mdl7 <- lm(Gastos_comunicacion_D ~ I(Software*Equipos) + Gremio, data = df)"

@@ -1,0 +1,4 @@
+"0","tidy(fit1)"
+"2","Warning: cannot open compressed file 'C:/Users/alvar/OneDrive/Escritorio/A<f1>o academico 2022/2do semestre 2022/Econometria 2/TRABAJO FINAL/.Rproj.user/shared/notebooks/6183AC69-TRABAJO FINAL/1/AAD469B21D22C5A0/ctpxizl3tgy3s_t\_rs_rdf_3754680c2914.rdf', probable reason 'Illegal byte sequence'"
+"2","Error in gzfile(file, ""wb"") : cannot open the connection
+"

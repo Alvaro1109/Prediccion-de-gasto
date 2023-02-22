@@ -1,0 +1,737 @@
+---
+title: "TRABAJO FINAL"
+author: "Maria Jose Aravena, Alvaro Concha, Francisca Cabrera, Carolina Vejar"
+date: "2022-12-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(skimr)
+library(corrplot)
+library(broom)
+library(lmtest)
+library(plm)
+datos <- read_excel("EC1116C dataf.xlsx")
+base <- read_excel("EC1116C dataf_dicc.xlsx")
+```
+```{r}
+df <- datos %>% 
+         select_if(is.numeric)
+df[is.na(df)] <- 0
+```
+Con este codigo se seleccionaron las variables numericas de la base original
+
+```{r}
+a <- base %>% 
+  filter(CÓDIGO == 'D180')
+
+base[base$`GLOSA PREGUNTA` == "Respecto a su empresa, indique:" ,]
+```
+
+
+```{r}
+df1 <- df[,1:25]
+df2 <- df[,26:50]
+df3 <- df[,51:75]
+df4 <- df[,76:100]
+df5 <- df[,101:125]
+df6 <- df[,126:150]
+df7 <- df[,151:175]
+df8 <- df[,176:200]
+df9 <- df[,201:225]
+df10 <- df[,226:250]
+df11 <- df[,251:275]
+df12 <- df[,276:300]
+df13 <- df[,301:325]
+df14 <- df[,326:350]
+df15 <- df[,351:375]
+df16 <- df[,376:400]
+df17 <- df[,401:425]
+df18 <- df[,425:446]
+```
+
+Aca se separo la base de datos en 18 grupos diferentes 
+
+
+```{r}
+df1$GASTOS <- datos$C045
+df2$GASTOS <- datos$C045
+df3$GASTOS <- datos$C045
+df4$GASTOS <- datos$C045
+df5$GASTOS <- datos$C045
+df6$GASTOS <- datos$C045
+df7$GASTOS <- datos$C045
+df8$GASTOS <- datos$C045
+df9$GASTOS <- datos$C045
+df10$GASTOS <- datos$C045
+df11$GASTOS <- datos$C045
+df12$GASTOS <- datos$C045
+df13$GASTOS <- datos$C045
+df14$GASTOS <- datos$C045
+df15$GASTOS <- datos$C045
+df16$GASTOS <- datos$C045
+df17$GASTOS <- datos$C045
+df18$GASTOS <- datos$C045
+```
+Y se agrego la variable a explicar en cada uno de los grupos constituidos
+
+```
+round(cor(df_n),2) 
+```
+
+Con este Codigo se fueron explorando las correlaciones de cada uno de los grupos, con respecto a la variable a explicar
+con el fin de obtener las variables con correlaciones mas fuertes
+
+
+
+```{r}
+#Asociaciones gremiales
+Gremio <- df$D082
+
+#EXportaciones
+Exportaciones <- df$D180
+
+#c041 0.43 Total Ingresos 2019
+Ingresos_2019 <- df$C041
+
+#c037 0.43 ingresos por actividad principal 2019
+Ingresos_AP2019 <- df$C037
+
+#c006 0.22 costo de venta 2018
+Costo_v2018 <- df$C006
+
+#c005 0.42 total ingresos 2018
+Ingresos_2018 <- df$C005
+
+#c001 0.41 ingresos por actividad principal 2018
+IngresosAP2018 <- df$C001
+
+#c010 0.35 gastos generales 2018
+GastosG_2018 <- df$C010
+
+#c012 0.34 remuneraciones 2018
+Remun_2018 <- df$C012
+
+#c020 0.42 total gastos 2018
+Gastos_2018 <- df$C020
+
+#c022 0.47 activos circulantes 2018
+ActivosCir_2018 <- df$C022
+
+#c027 0.48 cuentas por pagar corto plazo 2018
+ctasxpagar_2018 <- df$C027 
+
+#c046 0.35 gastos generales 2019
+GastosG_2019 <- df$C046
+
+#c048 0.38 remuneraciones 2019
+Remuner_2019 <- df$C048
+
+#c056 0.43 total gastos 2019
+Gastos_2019 <- df$C056
+
+#c058 0.47 activos circulantes 2019
+Activoscir_2019 <- df$C058
+
+#c063 0.47 cuentas por pagar corto plazo 2019
+ctasxpagar_2019 <- df$C063
+
+#c072 0.35 total pasivos 2019
+Pasivos_2019 <- df$C072
+
+#c065 0.35 pasivos circulantes 2019
+PasivosCir_2019 <- df$C065
+
+#i161 0.39 REMUNERACIONES DIRECTIVOS Y GERENTES HOMBRES
+Remun_directivos_H <- df$I161
+
+#i162 0.35 REMUNERACIONES PROFESIONALES HOMBRES
+Remun_prof_H <- df$I162
+
+#i169 0.24 REMUNERACIONES TOTALES HOMBRES
+Remun_T_H <- df$I169
+
+#i170 0.45 REMUNERACIONES DIRECTIVOS Y GERENTES MUJERES 
+Remun_directivos_M <- df$I170
+
+#i171 0.50 REMUNERACIONES Profesionales MUJERES
+Remun_prof_M <- df$I171
+
+#i178 0.47 REMUNERACIONES TOTALES MUJERES
+Remun_T_M <- df$I178
+
+#i131 0.52 PERSONAS SUBCONTRATADAS MUJERES
+Subcontrato_M <- df$I131
+
+#i130 0.45 PERSONAS SUBCONTRATADAS HOMBRES
+Subcontrato_H <- df$I130
+
+#Anio inicio
+Anio_inicio <- df$A068
+
+#Teletrabajo
+Teletrabajo <- df$I114
+
+#Equipos computacionales
+Equipos <- df$B092
+
+#Sofrware
+Software <- df$B093
+
+
+Gastos_comunicacion <- df$C045
+
+```
+
+
+```{r}
+
+data <- data.frame(Gastos_comunicacion,Ingresos_2019
+                   ,Ingresos_2018,
+                   Gastos_2018
+                   ,Gastos_2019,Activoscir_2019,Pasivos_2019,
+                   Remun_directivos_H,Remun_prof_H,Remun_T_H,Remun_directivos_M,Remun_prof_M
+                   ,Remun_T_M,Subcontrato_M,Subcontrato_H,Gremio,Anio_inicio,Exportaciones
+                   ,Teletrabajo,Equipos,Software)
+
+```
+
+
+Se crea un data frame con las variables seleccionadas
+
+```{r}
+Gastos_comunicacion_D <- data$Gastos_comunicacion
+Gastos_comunicacion_D[Gastos_comunicacion_D > 0] <- 1
+
+
+
+data$Gastos_comunicacion_D <- Gastos_comunicacion_D
+
+```
+
+Se crea una nueva variable dicotomica para la decision de gastar o no en comunicacion y TIC
+
+```{r}
+head(data)
+```
+
+## GRAFICO DE CORRELACIONES
+```{r}
+data %>% 
+  select(where(is.numeric)) %>%
+  cor(use = "complete.obs") %>% 
+  corrplot(method = 'number' , type = 'upper', order = 'alphabet')
+```
+
+
+## TABLA DE CORRELACIONES
+```{r}
+round(cor(data),2) 
+```
+
+
+
+# 1. Explicar la decision de las empresas de gastar o no en servicios de comunicacion y TICs en el a˜no 2019
+
+#### GASTOS COMUNICACION D
+##### VARIABLE DICOTOMICA QUE REPRESENTA LA DECICION DE GASTAR EN COMUNICACION Y TIC
+
+##### Variables que tienen una correlacion mas alta con Gastos de comunicacion D
+
+##### **Software 0.19**
+
+##### **Equipos  0.25**
+
+##### **Anio inicio -0.16**
+
+##### **Gremio  0.16**
+
+##### **Exportaciones -0.15**
+
+##### **Teletrabajo 0.11**
+
+
+### Modelo lineal
+
+```{r}
+mdl1 <- lm(Gastos_comunicacion_D ~ Software + Equipos + Anio_inicio, data = df)
+mdl2 <- lm(Gastos_comunicacion_D ~ Software + Equipos + Gremio, data = df)
+mdl3 <- lm(Gastos_comunicacion_D ~ Software + Equipos + Exportaciones, data = df)
+mdl4 <- lm(Gastos_comunicacion_D ~ Software:Equipos + Anio_inicio, data = df)
+mdl5 <- lm(Gastos_comunicacion_D ~ Software:Equipos + Gremio, data = df)
+mdl6 <- lm(Gastos_comunicacion_D ~ I(Software*Equipos) + Anio_inicio, data = df)
+mdl7 <- lm(Gastos_comunicacion_D ~ I(Software*Equipos) + Gremio, data = df)
+```
+
+```{r}
+Modelo1 <- glance(mdl1) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl1")
+
+Modelo2 <- glance(mdl2) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl2")
+
+Modelo3 <- glance(mdl3) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl3")
+
+Modelo4 <- glance(mdl4) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl4")
+
+Modelo5 <- glance(mdl5) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl5")
+
+Modelo6 <- glance(mdl6) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl6")
+
+Modelo7 <- glance(mdl7) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl7") 
+``` 
+
+```{r} 
+bind_rows(Modelo1,Modelo2,Modelo3,Modelo4,Modelo5,Modelo6, Modelo7)
+```
+
+Se crea una tabla que contiene los valores:
+
+**R^2**, **Grados de libertad**, **AIC**, **BIC**
+
+Con esta tabla se aprecia que el $r^2$ con mas valor lo tiene el modelo 6 y 7, a su vez,
+las metricas AIC y BIC tienen el valor mas bajo con estos modelos, lo que quiere decir que,
+los modelos 6 y 7 tienen un mayor nivel de prediccion con respecto a los demas.
+ 
+
+```{r}
+tidy(mdl1)
+```
+El porcentaje de decision de gasto en comunicacion y tic, aumenta en un 10.3% cuando la empresa tiene unidades de software
+
+El porcentaje de decision de gasto en comunicacion y tic aumenta en 21% cuando la empresa tiene Equipos computacionales
+
+El porcentaje de decision de gasto en comunicacion y tic Disminuye un 0.5% cuando la empresa aumenta 1 anio de funcionamiento
+
+```{r}
+tidy(mdl2)
+```
+El porcentaje de decision de gasto en comunicacion y tic, aumenta en un 9.9% cuando la empresa tiene unidades de software
+
+El porcentaje de decision de gasto en comunicacion y tic aumenta en 20% cuando la empresa tiene Equipos computacionales
+
+El porcentaje de decision de gasto en comunicacion y tic aumenta un 13.8% cuando la empresa participa de gremios
+
+
+```{r}
+tidy(mdl3)
+```
+El porcentaje de decision de gasto en comunicacion y tic, aumenta en un 11.3% cuando la empresa tiene unidades de software
+
+El porcentaje de decision de gasto en comunicacion y tic aumenta en 20.3% cuando la empresa tiene Equipos computacionales
+
+El porcentaje de decision de gasto en comunicacion y tic disminuye un 16.7% cuando la empresa hace exportaciones
+
+```{r}
+tidy(mdl4)
+```
+CUando hacemos la combinacion $Software:Equipos$, se obtiene una prediccion con distinta pendiente pero el mismo intercepto, esto quiere decir que el punto de partida es el mismo, pero la pendiente cambia entre las variables
+
+y para este modelo se tiene que la decision de gastar en comunicacion y TIC disminuye en un 0.5% cuando el anio de la empresa aumenta
+
+Y para la combinacion de las variables software y equipos se tiene que la decision de gasto aumenta en un 23.1%  cuando la empresa tiene unidades de software y equipos computacionales
+
+```{r}
+tidy(mdl5)
+```
+Para este caso se utiliza la misma combinacion pero se cambia la variable Anio por la variable Gremio
+
+En este modelo la decision de gasto aumenta con Gremio un 16.8% y con la combinacion de software y equipos aumenta un 22.22%
+
+```{r}
+tidy(mdl6)
+```
+Para este modelo se utiliza la combinacion $Software*Equipos$, que quiere decir que las variables presentan distinta pendiente y distinto intercepto 
+
+Y para este modelo se prensenta que la decision de gastar en comunicacion y TIC aumenta con la combinacion de software y equipos un 23.14% y disminuye un 0.5% a medida que aumentan los anios de la empresa
+
+```{r}
+tidy(mdl7) 
+```
+
+Para este modelo se utiliza la misma combinacion $Software*Equipos$ y se tiene que aumenta un 22.22% la decision de gastar en comunicacion y TIC 
+
+Y para la variable Gremio la decision de gastar tambien aumenta un 16.8% cuando la empresa pertenece a un Gremio
+
+
+```
+
+Cabe destacar que cada uno de los modelos y sus respectivas variables presentan un valor-p muy bajo, por lo que se rechaza la hipotesis nula en cada uno de los casos concluyendo asi que todas las variables presentadas en cada uno de los modelos son significativas para la predecir la decision de gasto
+
+```
+
+### MODELOS PROBIT
+
+```{r}
+mdlp1<-glm(Gastos_comunicacion_D ~ Software + Equipos + Anio_inicio, data = data, family = binomial(link = "probit"))
+
+mdlp2<-glm(Gastos_comunicacion_D ~ Software + Equipos + Gremio, data = data, family = binomial(link = "probit"))
+
+mdlp3<-glm(Gastos_comunicacion_D ~ Software + Equipos + Exportaciones, data = data, family = binomial(link = "probit"))
+
+mdlp4<-glm(Gastos_comunicacion_D ~ Software:Equipos + Anio_inicio, data = data, family = binomial(link = "probit"))
+
+mdlp5<-glm(Gastos_comunicacion_D ~ Software:Equipos + Gremio, data = data, family = binomial(link = "probit"))
+
+mdlp6<-glm(Gastos_comunicacion_D ~ I(Software*Equipos) + Anio_inicio, data = data, family = binomial(link = "probit"))
+
+mdlp7<-glm(Gastos_comunicacion_D ~ I(Software*Equipos) + Gremio, data = data, family = binomial(link = "probit"))
+```
+
+
+```{r}
+
+MP1 <- glance(mdlp1) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl1")
+
+MP2 <- glance(mdlp2) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl2")
+
+MP3 <- glance(mdlp3) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl3")
+
+MP4 <- glance(mdlp4) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl4")
+
+MP5 <- glance(mdlp5) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl5")
+
+MP6 <- glance(mdlp6) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl6")
+
+MP7 <- glance(mdlp7) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl7") 
+
+```
+```{r}
+
+bind_rows(MP1,MP2,MP3,MP4,MP5,MP6,MP7)
+```
+
+Para el caso de modelos Probit se tiene que el mejor modelo obtenido es el modelo 6, presentando un menor AIC y BIC que los demas modelos
+
+```{r}
+tidy(mdlp1)
+```
+
+```{r}
+tidy(mdlp2)
+```
+```{r}
+tidy(mdlp3)
+```
+```{r}
+tidy(mdlp4)
+```
+```{r}
+tidy(mdlp5)
+```
+```{r}
+tidy(mdlp6)
+```
+
+```{r}
+tidy(mdlp7) 
+``` 
+
+Para resumir, se hicieron 7 modelos probit con las mismas combinaciones hechas en los modelos lineales de lo que se puede concluir que:
+
+Todas las variables presentan una relacion directamente proporcional en relacion a la decision de gasto en comunicacion y TIC, a excepcion de las variables Anio_inicio y Exportaciones que son las unicas dos que presentan una relacion inversa en relacion a la decision de gasto
+
+
+### MODELOS LOGIT
+```{r}
+mdlL1<-glm(Gastos_comunicacion_D ~ Software + Equipos + Anio_inicio, data = data, family = "binomial")
+
+mdlL2<-glm(Gastos_comunicacion_D ~ Software + Equipos + Gremio, data = data, family = "binomial")
+
+mdlL3<-glm(Gastos_comunicacion_D ~ Software + Equipos + Exportaciones, data = data, family = "binomial")
+
+mdlL4<-glm(Gastos_comunicacion_D ~ Software:Equipos + Anio_inicio, data = data, family = "binomial")
+
+mdlL5<-glm(Gastos_comunicacion_D ~ Software:Equipos + Gremio, data = data, family = "binomial")
+
+mdlL6<-glm(Gastos_comunicacion_D ~ I(Software*Equipos) + Anio_inicio, data = data, family = "binomial")
+
+mdlL7<-glm(Gastos_comunicacion_D ~ I(Software*Equipos) + Gremio, data = data, family = "binomial")
+```
+
+```{r}
+ML1 <- glance(mdlL1) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl1")
+
+ML2 <- glance(mdlL2) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl2")
+
+ML3 <- glance(mdlL3) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl3")
+
+ML4 <- glance(mdlL4) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl4")
+
+ML5 <- glance(mdlL5) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl5")
+
+ML6 <- glance(mdlL6) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl6")
+
+ML7 <- glance(mdlL7) %>% 
+  select(AIC,BIC) %>% 
+  mutate(Modelo = "mdl7") 
+```
+
+```{r}
+bind_rows(ML1,ML2,ML3,ML4,ML5,ML6,ML7)
+```
+Para los modelos Logit se tiene que el mejor modelo obtenido es el modelo 6 obteniendo valores de AIC y BIC menores a los demas modelos
+
+```{r}
+tidy(mdlL1)
+```
+
+```{r}
+tidy(mdlL2)
+```
+```{r}
+tidy(mdlL3)
+```
+```{r}
+tidy(mdlL4)
+```
+```{r}
+tidy(mdlL5)
+```
+```{r}
+tidy(mdlL6)
+```
+
+```{r}
+tidy(mdlL7) 
+```
+
+Y para resumir, al igual que en los modelos Probit, se tiene que todas las variables presentan una relacion directamente proporcional con la decision de gasto en comunicacion y TIC a excepcion de las variables Anio_inicio y Exportaciones que presentan una relacion inversa con respecto al Gasto
+
+
+# 2. Explicar el nivel de gastos de servicios de comunicaci´on y TICs de la empresas en el a˜no 2019
+
+Se seleccionan las variables con mas correlacion con respecto al nivel de gasto en comunicacion y TICs
+
+**Ingresos_2019**, **Remun_T_M**, **Remun_T_H**, **Gastos_2019**
+
+### Modelo Lineal
+
+```{r}
+fit1 <- lm(Gastos_comunicacion ~ Ingresos_2019 + Gastos_2019 + Remun_T_H + Remun_T_M, data = df)
+
+
+fit2 <- lm(Gastos_comunicacion ~ Ingresos_2019:Gastos_2019 + Remun_T_H + Remun_T_M, data = df)
+
+fit3 <- lm(Gastos_comunicacion ~ I(Ingresos_2019*Gastos_2019) + Remun_T_H + Remun_T_M, data = df)
+
+fit4 <- lm(Gastos_comunicacion ~ I(Ingresos_2019*Gastos_2019), data = df)
+
+fit5 <- lm(Gastos_comunicacion ~ Ingresos_2019:Gastos_2019, data = df)
+
+fit6 <- lm(Gastos_comunicacion ~ Ingresos_2019 + Gastos_2019, data = df)
+```
+
+
+
+
+```{r}
+Mfit1 <- glance(fit1) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl1")
+
+Mfit2 <- glance(fit2) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl2")
+
+Mfit3 <- glance(fit3) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl3")
+
+Mfit4 <- glance(fit4) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl4")
+
+Mfit5 <- glance(fit5) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl5")
+
+Mfit6 <- glance(fit6) %>% 
+  select(r.squared,df,AIC,BIC) %>% 
+  mutate(Modelo = "mdl6")
+
+
+```
+
+```{r}
+bind_rows(Mfit1,Mfit2,Mfit3,Mfit4,Mfit5,Mfit6)
+```
+
+Se puede apreciar que los mejores modelos obtenidos son el modelo 2 y 3 presentando un $R^2$ de 26.3%, ademas de presentar un AIC y BIC menor a los demas modelos  
+
+```{r}
+tidy(fit1)
+```
+Para el modelo 1 se tiene que si los ingresos aumentan en 1 unidad, el nivel de gasto en comunicacion aumenta en 0.00629 unidades
+
+Si los gastos aumentan en 1 unidad, el nivel de gasto en comunicacion disminuye en un -0.00504 unidades
+
+Si las remuneraciones totales para hombres aumentan en 1 unidad los gastos en comunicacion y TICs disminuyen en 0.0262 unidades
+
+Si las remuneraciones totales para mujeres aumentan en 1 unidad los gastos en comunicacion y TICs aumentan en 0.251 unidades
+ 
+
+
+```{r}
+tidy(fit2)
+```
+Para el modelo 1 se tiene que si la combinacion de ingresos y gastos del 2019 aumentan en una unidad, entonces el gasto en comunicacion y TICs aumenta en 4.02e-14
+
+Si las remuneraciones totales para hombres aumentan en 1 unidad los gastos en comunicacion y TICs disminuyen en 0.0136 unidades
+
+Si las remuneraciones totales para mujeres aumentan en 1 unidad los gastos en comunicacion y TICs aumentan en 0.28 unidades
+
+
+```{r}
+tidy(fit3)
+```
+
+Para el modelo 1 se tiene que si la combinacion de ingresos y gastos del 2019 aumentan en una unidad, entonces el gasto en comunicacion y TICs aumenta en 4.02e-14
+
+Si las remuneraciones totales para hombres aumentan en 1 unidad los gastos en comunicacion y TICs disminuyen en -1.36e- 2  unidades
+
+Si las remuneraciones totales para mujeres aumentan en 1 unidad los gastos en comunicacion y TICs aumentan en 2.80e- 1 unidades
+
+```{r}
+tidy(fit4)
+```
+Para este modelo se tiene que si la combinacion entre ingresos y gastos del 2019 aumentan en 1 unidad, entonces el gasto en comunicacion y TICs aumenta en 6.95e-14
+
+```{r}
+tidy(fit5)
+```
+Para este modelo se tiene que si la combinacion entre ingresos y gastos del 2019 aumentan en 1 unidad, entonces el gasto en comunicacion y TICs aumenta en 6.95e-14
+
+```{r}
+tidy(fit6)
+```
+Para este modelo se tiene que si los ingresos del 2019 aumentan en 1 unidad entonces los gastos de comunicacion y TICs aumentan en 0.0136
+
+Y si los Gastos del 2019 aumentan en 1 unidad entonces el gasto en comunicacion y TICs disminuye en 0.0115 unidades
+
+```
+Cabe destacar que para cada uno de los modelos el valor-p de las variables es muy cercano a 0, por lo que se concluye que todas las variables son significativas para la prediccion de la variable Gastos en comunicacion y TICs
+
+```
+### Se corrige heterocedasticidad y autocorrelacion 
+
+```{r}
+coeftest(fit1,vcov = vcovHC(fit1,type="HC0"))
+```
+
+Para el modelo 1 se tiene que los valores cambian y que solo las remuneraciones totales de mujeres son significativas
+
+```{r}
+coeftest(fit2,vcov = vcovHC(fit2,type="HC0"))
+```
+Para el modelo 2 las variables significativas son las remuneraciones totales mujeres y la combinacion entre ingresos y gastos 2019
+
+```{r}
+coeftest(fit3,vcov = vcovHC(fit3,type="HC0"))
+```
+Las variables significativas en este caso son las remuneraciones totales mujeres y la combinacion entre ingresos y gastos 2019
+
+```{r}
+coeftest(fit4,vcov = vcovHC(fit4,type="HC0"))
+```
+La combinacion entre ingresos y gastos sigue siendo significativa
+
+```{r}
+coeftest(fit5,vcov = vcovHC(fit5,type="HC0"))
+```
+
+En este modelo tambien sigue siendo significativa la relacion entre los ingresos y gastos
+
+```{r}
+coeftest(fit6,vcov = vcovHC(fit6,type="HC0"))
+```
+Los gastos e ingresos del 2019 no son significativos a la hora de predecir 
+
+
+# Conclusiones 
+
+## Objetivo 1
+
+Para el objetivo 1, predecir la decision de gastar en servicios de comunicacion y TICs se seleccionaron las variables dicotomicas: 
+
+- Software
+- Equipos
+- Anio inicio
+- Gremio
+- Exportaciones
+- Teletrabajo
+
+Con las cuales se hicieron diferentes modelos lineales, probit y logit para intentar predecir el porcentaje de decision de gasto en comunicacion y TICs
+
+Para esto se encontro que el Modelo 6 que ocupa las variables explicativas $Anio inicio$ y la combinacion de variables con distinta pendiente y distinto intercepto $Sofware*Equipos$, es el mejor a la hora de predecir esta decision
+
+Con esto podemos concluir que si la empresa posee Software y Equipos computacionales entonces aumenta la probabilidad de que esta misma gaste en comunicacion y TICs. Es logico pensar esto ya que los software y equipos computacionales son en si una forma de comunicacion y tecnologia de informacion, por ende se es directamente proporcional al gasto en comunicacion y TICs
+
+asi tambien se tiene que si la empresa hace exportaciones y participa de un gremio entonces tambien afecta a la probabilidad de de gasto en comunicacion y TICs pero el efecto es menor que con las variables software y equipos
+
+
+
+## Objetivo 2
+
+Para el objetivo 2, predecir el nivel de gastar en servicios de comunicacion y TICs se seleccionaron las variables:
+
+- Ingresos 2019
+- Remuneraciones totales hombres
+- Remuneraciones totales mujeres
+- Gastos 2019
+
+Se seleccionaron estas variables al comprobar la correlacion entre estas y la variable Gastos en comunicacion y TICs, siendo estas variables las que presentan una correlacion mas fuerte que las demas
+
+Se encontro que los modelos 2 y 3 eran los mejores a la hora de predecir el nivel de gasto.
+Para el modelo 2 se tiene una combinacion de igual intercepto y distinta pendiente para las variables ingresos y gastos del 2019 y para el modelo 3 se tiene una combinacion de distinto intercepto y distinta pendiente para las variables ingresos y gastos del 2019
+
+Se concluye asi que las variables ingresos y gastos del 2019 por si solas no son significativas, esto se comprueba con la correccion de la matriz HAC, pero al juntarlas y combinarlas si son significativas a la hora de predecir el nivel de gasto en comunicacion y TICs 
+
+Tambien se tiene que tomar en cuenta que la variable remuneraciones totales mujeres es significativa a la hora de predecir estos gastos, a diferencia de la variable remuneraciones totales hombres. Esto deja harto que pensar ya que a medida que aumentan las remuneraciones para las mujeres, aumenta el nivel de gasto, por el contrario de las remuneraciones de hombres
+
+
+

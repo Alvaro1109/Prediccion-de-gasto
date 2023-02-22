@@ -1,0 +1,73 @@
+install.packages("tidyverse")
+install.packages("readx1")
+install.packages("ggplot2")
+library(ggplot2)
+library(readxl)
+# CARGAMOS LA BASE DE DATOS ASIGNANDO NOMBRE ANEXO EN CARPETA
+glosa<- read_excel("Downloads/EC1116C dataf.xlsx")
+View(glosa)
+glosap<- read_excel("Downloads/EC1116C dataf_dicc.xlsx")
+View(glosap)
+
+
+#NIVEL DE GASTO EN COMUNICACION Y TICS
+# Y SERÁ LA VARIABLE A PREDECIR
+Y<-glosa$C045
+
+X1<-glosa$B093 
+X2<-glosa$B092
+X3<-glosa$C001 # INGRESOS POR ACTIVIDAD PRINCIPAL DE LA EMPRESA
+X4<-glosa$I114 # TELETRABAJO
+X5<-glosa$D094 # DESARROLLAR O COMPRAR TECNOLOGÍA CON DISTRIBUIDORES
+(cor(Y, X5))
+lm(Y~X5)
+model<- lm(Y~X1+X2+X3+X4+X5)
+summary(model)
+model2<- lm(Y~ X1*X2 + X3)
+model3<- lm(Y~ X3+X4+X5)
+model4<- lm(Y~ X1*X2 + X3 + X4*X5)
+summary(model2)
+summary(model3)
+summary(model4)
+
+#########################################################
+
+# DECISION DE GASTO EN COMUNICACION Y TICS
+Y_Dicotomica <- glosa$C045
+Y_Dicotomica[Y_Dicotomica > 0] <- 1
+Y_Dicotomica
+
+model5<- lm(Y_Dicotomica~X1+X2+X3+X4+X5)
+summary(model)
+model6<- lm(Y_Dicotomica~ X1*X2 + X3)
+model7<- lm(Y_Dicotomica~ X3+X4+X5)
+model8<- lm(Y_Dicotomica~ X1*X2 + X3 + X4*X5)
+
+# PROBIT
+
+model9<- glm(Y_Dicotomica~X1+X2+X3+X4+X5, family = binomial(link = "probit"))
+summary(model)
+model10<- glm(Y_Dicotomica~ X1*X2 + X3, family = binomial(link = "probit"))
+model11<- glm(Y_Dicotomica~ X3+X4+X5, family = binomial(link = "probit"))
+model12<- glm(Y_Dicotomica~ X1*X2 + X3 + X4*X5, family = binomial(link = "probit"))
+
+
+#LOGIT 
+
+model13<- glm(Y_Dicotomica~X1+X2+X3+X4+X5, family = "binomial")
+summary(model)
+model14<- glm(Y_Dicotomica~ X1*X2 + X3, family = "binomial")
+model15<- glm(Y_Dicotomica~ X3+X4+X5, family = "binomial")
+model16<- glm(Y_Dicotomica~ X1*X2 + X3 + X4*X5, family = "binomial")
+
+            
+            
+
+
+
+
+
+
+
+
+         
